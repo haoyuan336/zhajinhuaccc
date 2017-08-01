@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>data</key>
+	<dict>
+		<key>infoCheckVersion</key>
+		<string>正在检查游戏版本，请稍候。。。</string>
+		<key>infoPreload</key>
+		<string>正在加载游戏资源，请稍候。。。(%d/%d)</string>
+		<key>infoPreloadFinish</key>
+		<string>加载完成，准备进入游戏</string>
+		<key>titleTishi</key>
+		<string>提示</string>
+		<key>titleCuowu</key>
+		<string>错误</string>
+		<key>netErrorMsg01</key>
+		<string>与远程服务器断开连接</string>
+		<key>netErrorMsg02</key>
+		<string>连接游戏服务器失败</string>
+		<key>netErrorMsg03</key>
+		<string>网络连接失败，请检查你的网络设置</string>
+		<key>netErrorMsg04</key>
+		<string>检测更新失败，请退出重试或联系客服</string>
+	</dict>
+	<key>metadata</key>
+	<dict>
+		<key>format</key>
+		<integer>1</integer>
+	</dict>
+</dict>
+</plist>
