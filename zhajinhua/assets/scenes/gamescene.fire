@@ -21,7 +21,7 @@
     "_active": true,
     "_components": [],
     "_prefab": null,
-    "_id": "54c16jpyqRK/5TY1f6Y2N4r",
+    "_id": "55f0b86b-8c4f-400f-b7dc-6ecc65183bac",
     "_opacity": 255,
     "_color": {
       "__type__": "cc.Color",
@@ -44,7 +44,8 @@
     "_localZOrder": 0,
     "_globalZOrder": 0,
     "_opacityModifyRGB": false,
-    "groupIndex": 0
+    "groupIndex": 0,
+    "autoReleaseAssets": false
   },
   {
     "__type__": "cc.Node",
@@ -62,7 +63,7 @@
     "_active": true,
     "_components": [
       {
-        "__id__": 4
+        "__id__": 5
       }
     ],
     "_prefab": null,
@@ -104,7 +105,7 @@
   },
   {
     "__type__": "cc.Node",
-    "_name": "New Node",
+    "_name": "gameController",
     "_objFlags": 0,
     "_parent": {
       "__id__": 2
@@ -112,7 +113,11 @@
     "_children": [],
     "_tag": -1,
     "_active": true,
-    "_components": [],
+    "_components": [
+      {
+        "__id__": 4
+      }
+    ],
     "_prefab": null,
     "_id": "aaf3bjcvc5G7oOYfgCo2MM4",
     "_opacity": 255,
@@ -149,6 +154,18 @@
     "_globalZOrder": 0,
     "_opacityModifyRGB": false,
     "groupIndex": 0
+  },
+  {
+    "__type__": "9fff1AcXj5FWI0quOLFN8Hm",
+    "_name": "",
+    "_objFlags": 0,
+    "node": {
+      "__id__": 3
+    },
+    "_enabled": true,
+    "mainWorldPrefab": {
+      "__uuid__": "f32c2003-a173-4499-a7b3-3f2f4ac23083"
+    }
   },
   {
     "__type__": "cc.Canvas",
