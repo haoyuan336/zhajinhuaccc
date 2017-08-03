@@ -12,22 +12,15 @@ cc.Class({
     // use this for initialization
     onLoad: function () {
 
-        // global.socket = io.connect("localhost:3000");
-        // global.socket.on("welcome",  (data)=>{
-        //     cc.log("welcome =" + data);
-        // });
-        // if (cc.sys.isNative){
-        //     window.io = SocketIO;
-        // }
+        let ws = new WebSocket("ws://localhost:8181");
+        ws.onopen = function (e) {
+            console.log("connection to server opened");
+            
+        };
+        function sendMessage() {
+            ws.send($("#message").val());
+        }
 
-
-        global.socket = window.io.connect("localhost:3000",{"force new connection" : true});
-        global.socket.on("connect", function () {
-           cc.log("连接成功");
-        });
-        global.socket.on("disconnect", function () {
-            cc.log("断开连接");
-        });
 
         if (this.mainWorld !== undefined){
             this.mainWorld.removeFromParent(true);
