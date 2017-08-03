@@ -5,8 +5,6 @@
 
 module.exports = Emitter;
 
-window.EventEmitter = Emitter;
-
 /**
  * Initialize a new `Emitter`.
  *

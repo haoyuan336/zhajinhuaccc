@@ -1,4 +1,3 @@
-import global from './global'
 cc.Class({
     extends: cc.Component,
 
@@ -11,15 +10,6 @@ cc.Class({
 
     // use this for initialization
     onLoad: function () {
-
-        let ws = new WebSocket("ws://localhost:8181");
-        ws.onopen = function (e) {
-            console.log("connection to server opened");
-            
-        };
-        function sendMessage() {
-            ws.send($("#message").val());
-        }
 
 
         if (this.mainWorld !== undefined){
