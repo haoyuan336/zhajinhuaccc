@@ -14,13 +14,12 @@ cc.Class({
 
     },
     buttonClick: function (event, customData) {
-        cc.log("custom data = " + customData);
-        cc.log("edit box" + this.editBoxNode.getComponent(cc.EditBox).string);
-
-        global.socket.emit("login", this.editBoxNode.getComponent(cc.EditBox).string);
-
-
-
+        console.log("custom data = " + customData);
+        console.log("edit box" + this.editBoxNode.getComponent(cc.EditBox).string);
+        var nameStr = this.editBoxNode.getComponent(cc.EditBox).string;
+        if (nameStr.length != 0){
+            global.socket.emit("login", this.editBoxNode.getComponent(cc.EditBox).string);
+        }
     }
 
 

@@ -26,10 +26,20 @@
           port: port,
           log: true
         }, function() {
-        pomelo.request("connector.entryHandle.enter", "hello pomelo", function(data) {
+          console.log("连接成功");
+          alert("连接成功");
+
+
+          pomelo.request("connector.entryHandler.enter","Hello Pomelo", function (data) {
             alert(data.msg);
-          });
+          })
+
+
         });
+//        pomelo.request("connector.entryHandler.enter", "hello pomelo", function(data) {
+//            alert(data.msg);
+//          });
+//        });
       }
     </script>
  

@@ -10,12 +10,24 @@ const Socket = function (app) {
 
 
   that.on("connection", function (socket) {
-    console.log("a user connection");
+    // console.log("a user connection");
+    // socket.emit("welcome", "welcome");
+    // socket.on("disconnect", function () {
+    //   console.log('disconnect');
+    // });
 
-    if (_roomList[_roomList.length - 1].getPlayerCount() >6){
-      _roomList.push(Room());
-    }
-    _roomList[_roomList.length - 1].pushPlayer(Player(socket));
+    socket.on("login", function (name) {
+      console.log('login = ' + name);
+      socket.uid = name;
+      if (_roomList[_roomList.length - 1].getPlayerCount() >6){
+        _roomList.push(Room());
+      }
+      _roomList[_roomList.length - 1].pushPlayer(Player(socket));
+    });
+
+
+
+
 
   });
   return that;
