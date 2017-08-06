@@ -165,6 +165,9 @@
     "_enabled": true,
     "mainWorldPrefab": {
       "__uuid__": "f32c2003-a173-4499-a7b3-3f2f4ac23083"
+    },
+    "gameWorldPrefab": {
+      "__uuid__": "e3f924ec-4b99-4b7e-8e6c-11bbfa185f7f"
     }
   },
   {

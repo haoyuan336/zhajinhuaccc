@@ -10,20 +10,44 @@ const Socket = function (app) {
 
 
   that.on("connection", function (socket) {
-    // console.log("a user connection");
-    // socket.emit("welcome", "welcome");
-    // socket.on("disconnect", function () {
-    //   console.log('disconnect');
-    // });
+    socket.on("message", function (data) {
+      console.log("message = " + JSON.stringify(data));
+      if (data.body.message === 'login'){
+        playerLogin(data);
 
-    socket.on("login", function (name) {
-      console.log('login = ' + name);
-      socket.uid = name;
-      if (_roomList[_roomList.length - 1].getPlayerCount() >6){
+      }
+    });
+    const playerLogin = function (data) {
+      console.log("玩家登陆" + JSON.stringify(data));
+      var uid = data.body.data.uid;
+      socket.uid = uid;
+      if (_roomList[_roomList.length - 1].getPlayerCount() === 6){
         _roomList.push(Room());
       }
-      _roomList[_roomList.length - 1].pushPlayer(Player(socket));
-    });
+      _roomList[_roomList.length - 1].pushPlayer(Player(socket), function (syncData) {
+        console.log("创建玩家成功了");
+        //回调
+        socket.emit("message",{
+          id: data.id,
+          body: {
+            status: "ok",
+            data: syncData
+          }
+
+        })
+      });
+
+
+
+      // socket.emit("message",{
+      //   id: data.id,
+      //   body: {
+      //     status: "ok",
+      //     data: {msg: "welcome" + data.body.data.uid}
+      //   }
+      // })
+
+    }
 
 
 
