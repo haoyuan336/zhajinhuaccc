@@ -49,6 +49,7 @@ cc.Class({
     console.log("button click = " + customData);
     switch (customData){
       case "look":
+        global.gameEventListener.fire("player_button_click");
         this.showPokerValue();
         break;
       default:

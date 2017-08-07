@@ -17,7 +17,7 @@ cc.Class({
 
     // use this for initialization
     onLoad: function () {
-        global.socketManager = SocketManager("192.168.1.14","3000");
+        global.socketManager = SocketManager("192.168.31.190","3000");
         global.eventlistener = EventListener({});
         if (this.mainWorld !== undefined){
             this.mainWorld.removeFromParent(true);
@@ -43,14 +43,21 @@ cc.Class({
             })
         });
 
+
+        //游戏内消息
+
         global.eventlistener.on("start_button_click", function () {
             console.log("点击了开始游戏的按钮");
             //向服务器发送开始游戏的按钮
             global.socketManager.emit("start_game");
         });
+        global.eventlistener.on("player_button_click", function (buttonID) {
+           console.log("button click =" + buttonID);
+        });
 
 
 
+        //服务器消息
         global.socketManager.on("player_join_in", function (data) {
             console.log("有玩家加入游戏" + data);
             global.gameEventListener.fire("player_join_in", data);

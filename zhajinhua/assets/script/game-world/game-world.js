@@ -50,8 +50,11 @@ cc.Class({
       if (this.playerNodeList.length > 1){
         global.eventlistener.fire("start_button_click");
       }
+    });
 
 
+    global.gameEventListener.on("player_button_click", function (data) {
+      global.eventlistener.fire("player_button_click", data);
     });
     this.initUI();
 
