@@ -26,6 +26,24 @@ cc.Class({
       this.initPokers(data);
       this.uiButtons.active = true;
     });
+    global.gameEventListener.on("turn_player_index", (uid)=>{
+      //轮到我操作的时候，开始倒计时
+
+      if (uid === global.playerData.uid){
+
+        this.disableButton(true);
+      }else {
+        this.disableButton(false);
+      }
+    });
+    //先禁用按钮
+
+    //获取到按钮组件
+
+
+    var uiNode = this.node.getChildByName("ui");
+    this.buttonNodeList = uiNode.children;
+    this.disableButton(false);
   },
   initPokers: function (data) {
     this.pokersData = data;
@@ -49,11 +67,20 @@ cc.Class({
     console.log("button click = " + customData);
     switch (customData){
       case "look":
-        global.gameEventListener.fire("player_button_click");
+        global.gameEventListener.fire("player_button_click", "look");
         this.showPokerValue();
+        break;
+      case "1rate":
         break;
       default:
         break;
+    };
+    this.disableButton(false); //玩家操作之后，禁用按钮
+  },
+  disableButton: function (value) {
+    console.log("禁用按钮" + value);
+    for (var i in this.buttonNodeList){
+      this.buttonNodeList[i].interactable = value;
     }
   }
 

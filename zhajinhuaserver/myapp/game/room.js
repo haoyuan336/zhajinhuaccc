@@ -11,6 +11,7 @@ const RoomState = {
 const Room = function () {
   var that = {};
   var _roomManager = null;
+  var _turnPlayerIndex = 0;
   console.log("创建了一个房间");
   var _cardList = [];
   var _playerList = [];
@@ -138,6 +139,8 @@ const Room = function () {
       }
       player.sendCard(cards);
     }
+    ///发完牌之后，房间将轮到谁出牌的才做发送给每个玩家
+    turnPlayerIndex();
   };
 
 
@@ -162,6 +165,16 @@ const Room = function () {
   initCards();
 
 
+  const turnPlayerIndex = function () {
+    if (_turnPlayerIndex === _playerList.length){
+      _turnPlayerIndex  = 0;
+    }
+    for (var  i = 0 ; i < _playerList.length ; i ++){
+      var player = _playerList[i];
+      player.turnPlayerIndex(_playerList[_turnPlayerIndex].uid);
+    }
+    _turnPlayerIndex ++;
+  };
 
 
 

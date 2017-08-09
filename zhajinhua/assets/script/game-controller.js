@@ -52,7 +52,14 @@ cc.Class({
             global.socketManager.emit("start_game");
         });
         global.eventlistener.on("player_button_click", function (buttonID) {
-           console.log("button click =" + buttonID);
+           console.log("gamecontroller  button click =" + buttonID);//玩家点击了按钮
+            switch (buttonID){
+                case "look":
+                    global.socketManager.emit("look_cards");
+                    break;
+                default:
+                    break;
+            }
         });
 
 
@@ -73,6 +80,10 @@ cc.Class({
         global.socketManager.on("push_cards", function (data) {
           console.log("收到牌" + JSON.stringify(data));
             global.gameEventListener.fire("push_cards", data);
+        });
+        global.socketManager.on("turn_player_index", function (uid) {
+            console.log("现在轮到谁操作了" + uid);
+            global.gameEventListener.fire("turn_player_index", uid);
         })
     },
 

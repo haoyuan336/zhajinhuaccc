@@ -52,6 +52,9 @@ const Player = function (socket) {
   that.changeRoomManager = function (uid) {
     socket.emit("change_room_manager" , uid);
   };
+  that.turnPlayerIndex = function (uid) {
+    socket.emit("turn_player_index", uid);
+  };
 
   that.getState = function () {
     console.log("player state = " + _state);
@@ -61,7 +64,6 @@ const Player = function (socket) {
     if (_state === PlayerState.UnReady){
       return "UnReady";
     }
-
   };
 
   const setState = function (state) {
