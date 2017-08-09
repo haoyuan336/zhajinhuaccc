@@ -13,37 +13,67 @@ cc.Class({
       default: null,
       type: cc.Prefab
     },
-    uiButtons: {
+    lookButton: {
       default: null,
-      type: cc.Node
+      type: cc.Button
+    },
+    rate1Button: {
+      default: null,
+      type: cc.Button
+    },
+    rate2Button: {
+      default: null,
+      type: cc.Button
+    },
+    rate5Button: {
+      default: null,
+      type: cc.Button
+    },
+    pkButton: {
+      default: null,
+      type: cc.Button
+    },
+    giveupButton: {
+      default: null,
+      type: cc.Button
     }
 
   },
   onLoad: function () {
-    this.uiButtons.active = false;
     global.gameEventListener.on("push_cards", (data)=>{
       console.log("收到了poker 牌" + JSON.stringify(data));
       this.initPokers(data);
-      this.uiButtons.active = true;
+      //发完牌之后可以看牌
+      this.lookButton.interactable = true;
+      // this.uiButtons.active = true;
     });
-    global.gameEventListener.on("turn_player_index", (uid)=>{
+    global.gameEventListener.on("turn_player_index", (data)=>{
       //轮到我操作的时候，开始倒计时
-
-      if (uid === global.playerData.uid){
-
-        this.disableButton(true);
-      }else {
-        this.disableButton(false);
+      console.log("轮到谁 出牌了" + data.uid);
+      let uid = data.uid;
+      let currentRate = data.rate; // 取出当前的倍数
+      if (global.playerData.uid === uid){
+        let rateList = [1,2,5];
+        for (let i = 0 ; i < 3 ; i ++){
+          if (rateList[i] >= currentRate){
+            this['rate' + rateList[i] + 'Button'].interactable = true;
+          }
+        }
       }
     });
     //先禁用按钮
 
     //获取到按钮组件
+    this.disbaleBtton();
 
-
-    var uiNode = this.node.getChildByName("ui");
-    this.buttonNodeList = uiNode.children;
-    this.disableButton(false);
+  },
+  disbaleBtton: function () {
+    this.lookButton.interactable = false;
+    this.rate1Button.interactable = false;
+    this.rate2Button.interactable = false;
+    this.rate5Button.interactable = false;
+    this.pkButton.interactable = false;
+    this.giveupButton.interactable = false;
   },
   initPokers: function (data) {
     this.pokersData = data;
@@ -65,23 +95,33 @@ cc.Class({
   },
   buttonClick: function (target, customData) {
     console.log("button click = " + customData);
+    global.gameEventListener.fire("player_button_click", customData);
+
+    target.interactable = false;
+
     switch (customData){
       case "look":
-        global.gameEventListener.fire("player_button_click", "look");
+
         this.showPokerValue();
+        this.lookButton.interactable = false;
+
         break;
+
       case "1rate":
+
+      case "2rate":
+      case "5rate":
+
+        this.disbaleBtton();
+
+        break;
+      case "pk":
+        break;
+      case 'giveup':
         break;
       default:
         break;
     };
-    this.disableButton(false); //玩家操作之后，禁用按钮
-  },
-  disableButton: function (value) {
-    console.log("禁用按钮" + value);
-    for (var i in this.buttonNodeList){
-      this.buttonNodeList[i].interactable = value;
-    }
   }
 
 });

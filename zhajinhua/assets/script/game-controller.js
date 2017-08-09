@@ -17,7 +17,7 @@ cc.Class({
 
     // use this for initialization
     onLoad: function () {
-        global.socketManager = SocketManager("192.168.31.190","3000");
+        global.socketManager = SocketManager("localhost","3000");
         global.eventlistener = EventListener({});
         if (this.mainWorld !== undefined){
             this.mainWorld.removeFromParent(true);

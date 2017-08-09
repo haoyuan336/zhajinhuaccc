@@ -15,6 +15,7 @@ const Room = function () {
   console.log("创建了一个房间");
   var _cardList = [];
   var _playerList = [];
+  var _currentRate = 0;
   that.pushPlayer = function (player, cb) {
     if (_playerList.length === 0){
       _roomManager = player.uid;
@@ -171,7 +172,10 @@ const Room = function () {
     }
     for (var  i = 0 ; i < _playerList.length ; i ++){
       var player = _playerList[i];
-      player.turnPlayerIndex(_playerList[_turnPlayerIndex].uid);
+      player.turnPlayerIndex({
+        uid: _playerList[_turnPlayerIndex].uid,
+        rate: _currentRate
+      });
     }
     _turnPlayerIndex ++;
   };

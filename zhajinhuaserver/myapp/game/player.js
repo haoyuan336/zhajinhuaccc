@@ -52,8 +52,8 @@ const Player = function (socket) {
   that.changeRoomManager = function (uid) {
     socket.emit("change_room_manager" , uid);
   };
-  that.turnPlayerIndex = function (uid) {
-    socket.emit("turn_player_index", uid);
+  that.turnPlayerIndex = function (data) {
+    socket.emit("turn_player_index", data);
   };
 
   that.getState = function () {
