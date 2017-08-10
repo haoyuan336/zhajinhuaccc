@@ -16,6 +16,7 @@ const Room = function () {
   var _cardList = [];
   var _playerList = [];
   var _currentRate = 0;
+  var _totalRate = 0;
   that.pushPlayer = function (player, cb) {
     if (_playerList.length === 0){
       _roomManager = player.uid;
@@ -92,6 +93,43 @@ const Room = function () {
     }
   };
 
+  that.playerChooseRate = function (uid,rate) {
+    console.log(uid + "player choose rate =  " + rate);
+    _currentRate = rate;
+    _totalRate += _currentRate;
+    //告诉所有人 此玩家选择了倍数
+    for (var i = 0 ; i < _playerList.length ; i ++){
+      _playerList[i].playerChooseRate(uid, rate, _totalRate);
+    }
+    turnPlayerIndex();
+  };
+  that.playerLookCards = function (uid) {
+    console.log("player " + uid + "看牌了");
+    for (var i = 0 ; i < _playerList.length ; i ++){
+      if (_playerList[i].uid !== uid){
+        _playerList[i].playerLookCards(uid);
+      }
+    }
+  };
+  that.playerPK = function (uid, targetid) {
+
+    console.log(uid + "玩家选择与" + targetid + "pk");
+    //给玩家发送对方的牌 ，并且将胜负信息一并发送
+    // for (){
+
+    // }
+    var playerMap = {};
+    for (var i = 0 ; i < _playerList.length ; i ++){
+      playerMap[_playerList[i].uid] = _playerList[i];
+    }
+
+    playerMap[uid].sendPlayersCards(targetid,playerMap[targetid].getCurrentCards());
+
+  };
+  that.playerGiveUp = function (uid) {
+    console.log("玩家弃牌了" + uid);
+  };
+
 
   const changeRoomManger = function () {
     console.log("房主改变了 " + _playerList.length);
@@ -159,7 +197,7 @@ const Room = function () {
       _cardList.push(card);
       cardList.splice(i, 1);
     }
-    // console.log("card list = " + JSON.stringify(_cardList) + "count = " + _cardList.length);
+    console.log("card list = " + JSON.stringify(_cardList) + "count = " + _cardList.length);
   };
 
 

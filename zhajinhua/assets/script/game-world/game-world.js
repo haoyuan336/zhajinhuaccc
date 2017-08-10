@@ -21,6 +21,10 @@ cc.Class({
     pokerUIPrefab: {
       default: null,
       type: cc.Prefab
+    },
+    totalRateLabel: {
+      default: null,
+      type: cc.Label
     }
 
   },
@@ -68,6 +72,14 @@ cc.Class({
     global.gameEventListener.on("change_room_manager", (data)=>{
       // this.changeRoomManager(data);
     });
+    global.gameEventListener.on("player_choose_rate", (data)=>{
+      let totalRate = data.totalRate;
+      this.totalRateLabel.string = "总倍数" + totalRate;
+    });
+    global.gameEventListener.on("player_choose_pk", (uid)=>{
+      global.eventlistener.fire("player_choose_pk", uid);
+    });
+
 
   },
   createPlayer : function (data) {

@@ -904,7 +904,9 @@
     "pressedSprite": {
       "__uuid__": "06608fb3-e467-43df-ad84-034c735719e2"
     },
-    "hoverSprite": null,
+    "hoverSprite": {
+      "__uuid__": "06608fb3-e467-43df-ad84-034c735719e2"
+    },
     "clickEvents": [
       {
         "__id__": 27
@@ -1065,7 +1067,9 @@
     "pressedSprite": {
       "__uuid__": "52031291-1fa3-4e98-9959-3f8874cab262"
     },
-    "hoverSprite": null,
+    "hoverSprite": {
+      "__uuid__": "52031291-1fa3-4e98-9959-3f8874cab262"
+    },
     "clickEvents": [
       {
         "__id__": 32

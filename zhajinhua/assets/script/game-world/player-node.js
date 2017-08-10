@@ -20,15 +20,48 @@ cc.Class({
     cardPrefab: {
       default: null,
       type: cc.Prefab
+    },
+    rateLabel: {
+      default: null,
+      type: cc.Label
+    },
+    choosePlayerButton: {
+      default: null,
+      type: cc.Node
     }
     
   },
   onLoad: function () {
+
+    this.choosePlayerButton.active = false;
+
     global.gameEventListener.on("change_room_manager", (uid)=>{
       this.changeRoomManager(uid);
     });
     global.gameEventListener.on("push_cards", ()=>{
       this.initPoker();
+    });
+    global.gameEventListener.on("player_choose_rate", (data)=>{
+      let uid = data.uid;
+      let rate = data.rate;
+      this.playerChooseRate(uid, rate);
+    });
+    global.gameEventListener.on("player_pk",()=>{
+      console.log(" 玩家选择pk");
+      if (this.uid !== global.playerData.uid){
+        this.choosePlayerButton.active = true;
+      }
+    });
+    global.gameEventListener.on("player_choose_pk", (uid)=>{
+    //  玩家选好了 pk对象
+      this.choosePlayerButton.active = false;
+
+    });
+    global.gameEventListener.on("player_show_cards", (data)=>{
+      let targetId = data.targetid;
+      if (targetId === this.uid){
+        this.showPokerValue(data.cards);
+      }
     });
   },
   init: function (data, currentIndex) {
@@ -52,7 +85,17 @@ cc.Class({
     }
 
   },
+  playerChooseRate: function (uid, rate) {
+    if (uid === this.uid){
+      this.rateLabel.string = "倍数" + rate;
+    }
+  },
+  chooseButtonClick: function () {
+    global.gameEventListener.fire("player_choose_pk", this.uid);
+
+  },
   initPoker: function () {
+    this.cardsList = [];
     if (global.playerData.uid != this.uid){
       let pokerPos = this.pokerPosLlist[this.currentIndex];
       for (var i = 0 ; i < 3 ; i++){
@@ -62,8 +105,15 @@ cc.Class({
           x: pokerPos.x + 60 * i,
           y: pokerPos.y
         }
+        this.cardsList.push(node);
       }
     }
-
+  },
+  showPokerValue: function (cards) {
+    console.log("show card value = " + JSON.stringify(cards));
+    for (var i = 0 ; i < this.cardsList.length ; i ++ ){
+      var card = this.cardsList[i];
+      card.getComponent("card-node").showValue(cards[i]);
+    }
   }
 });

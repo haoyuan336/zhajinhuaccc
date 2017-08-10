@@ -53,6 +53,8 @@ cc.Class({
         });
         global.eventlistener.on("player_button_click", function (buttonID) {
            console.log("gamecontroller  button click =" + buttonID);//玩家点击了按钮
+            //给服务器发送玩家操作的消息
+            global.socketManager.emit("player_input", buttonID);
             switch (buttonID){
                 case "look":
                     global.socketManager.emit("look_cards");
@@ -60,6 +62,14 @@ cc.Class({
                 default:
                     break;
             }
+        });
+
+        global.eventlistener.on("player_choose_pk", (uid)=>{
+           //玩家选好了pk对象，发给服务器
+            global.socketManager.emit("player_pk", {
+                uid: global.playerData.uid,
+                targetid: uid
+            });
         });
 
 
@@ -84,6 +94,14 @@ cc.Class({
         global.socketManager.on("turn_player_index", function (uid) {
             console.log("现在轮到谁操作了" + uid);
             global.gameEventListener.fire("turn_player_index", uid);
+        });
+        global.socketManager.on("player_choose_rate", function (data) {
+            console.log("玩家选择了倍数" + JSON.stringify(data));
+            global.gameEventListener.fire("player_choose_rate", data);
+        });
+        global.socketManager.on("show_player_cards", function (data) {
+            console.log("收到了某人的牌" + JSON.stringify(data));
+            global.gameEventListener.fire("player_show_cards", data);
         })
     },
 

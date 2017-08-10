@@ -72,8 +72,8 @@ cc.Class({
     this.rate1Button.interactable = false;
     this.rate2Button.interactable = false;
     this.rate5Button.interactable = false;
-    this.pkButton.interactable = false;
-    this.giveupButton.interactable = false;
+    // this.pkButton.interactable = false;
+    // this.giveupButton.interactable = false;
   },
   initPokers: function (data) {
     this.pokersData = data;
@@ -116,6 +116,9 @@ cc.Class({
 
         break;
       case "pk":
+
+        global.gameEventListener.fire("player_pk");
+
         break;
       case 'giveup':
         break;

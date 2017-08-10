@@ -15,6 +15,7 @@ const Player = function (socket) {
   var that = socket;
   var _state = PlayerState.Invalide;
   var _isOffline = false;
+  var _currentCardsList = [];
   console.log("创建了一个玩家");
   that.isReady = false;
   that.index = undefined;
@@ -35,7 +36,47 @@ const Player = function (socket) {
     that.room.roomManagerStartGame(that.uid);
   });
 
+  socket.on("player_input", function (data) {
+    console.log("玩家输入了操作" + data);
+    switch (data){
+      case "look":
+
+        // that.room.pla
+        break;
+      case '1rate':
+        that.room.playerChooseRate(that.uid,1);
+        break;
+      case "2rate":
+        that.room.playerChooseRate(that.uid, 2);
+        break;
+      case "5rate":
+        that.room.playerChooseRate(that.uid, 5);
+        break;
+      case "pk":
+        break;
+      case "giveup":
+        break;
+      default:
+        break;
+    }
+
+  });
+
+  socket.on("player_pk", function (data) {
+    //玩家选择了pk
+    that.room.playerPK(data.uid, data.targetid);
+  });
+
+
+
+
+  that.getCurrentCards = function () {
+    return _currentCardsList;
+  };
+
   that.sendCard = function (data) {
+    // global.getCardsScore(data);
+    _currentCardsList = data;
     socket.emit("push_cards", data);
   };
 
@@ -55,6 +96,21 @@ const Player = function (socket) {
   that.turnPlayerIndex = function (data) {
     socket.emit("turn_player_index", data);
   };
+  that.playerChooseRate = function (uid, rate, totalRate) {
+    socket.emit("player_choose_rate", {
+      uid: uid,
+      rate: rate,
+      totalRate: totalRate
+    });
+  };
+
+  that.sendPlayersCards = function (uid, cards) {
+    socket.emit("show_player_cards", {
+      targetid: uid,
+      cards: cards
+    })
+  };
+
 
   that.getState = function () {
     console.log("player state = " + _state);
