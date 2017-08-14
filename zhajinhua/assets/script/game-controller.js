@@ -102,6 +102,14 @@ cc.Class({
         global.socketManager.on("show_player_cards", function (data) {
             console.log("收到了某人的牌" + JSON.stringify(data));
             global.gameEventListener.fire("player_show_cards", data);
+        });
+        global.socketManager.on("pk_result", function (data) {
+            console.log("收到玩家的pk结果" + JSON.stringify(data));
+            global.gameEventListener.fire("pk_result", data);
+        });
+        global.socketManager.on("game_over", function (data) {
+            console.log("收到游戏结束的消息" + JSON.stringify(data));
+            global.gameEventListener.fire("game_over", data);
         })
     },
 

@@ -12,61 +12,175 @@ global.getPlayerData = function (player) {
 global.pokerValue = ["1","2","3","4","5","6","7","8","9","10","11","12","13"];
 global.pokerColor = ["spades","hearts","clubs","diamonds"]; //黑红梅方
 
-global.getCardsScore = function (cards) {
-  var score = 0;
-  console.log("cards = " + JSON.stringify(cards));
-  //检查对子
-  var map = {};
-  for (var i = 0 ; i < cards.length ; i ++){
-    var card = cards[i];
-    map[card.value] = true;
-  }
-  console.log("map length = " + Object.keys(map));
-  if (Object.keys(map) === 2){
-    //说明是有对子的 加一分
-    console.log("对子");
-    score += 1;
-  }
 
-  //检查顺子
+const checkDouble = function (cards) {
+  var map = {};
+  var valueList = [];
+  var doubleValue = 0;
+  for (var i = 0 ; i < cards.length ; i ++){
+    if (map.hasOwnProperty(cards[i].value)){
+      doubleValue = cards[i].value;
+    }
+    map[cards[i].value] = true;
+    valueList.push(parseInt(cards[i].value));
+  }
+  if (Object.keys(map).length === 2){
+    valueList.sort(function (a, b) {
+      if (a === doubleValue){
+        return false
+      }
+      if (b === doubleValue){
+        return true;
+      }
+      return false;
+    });
+    return valueList
+  }
+  
+  
+  return false
+};
+const checkSmooth = function (cards) {
   var list = [];
-  for(var i = 0 ; i < cards.length ; i ++){
+  for (var i = 0 ; i < cards.length ; i ++){
     list.push(parseInt(cards[i].value));
   }
-  //然后排序
-  list.sort(function (a ,b) {
-    return a > b
+  list.sort(function (a,b) {
+    if (a === 1){
+      return false
+    }
+    if (b === 1){
+      return true;
+    }
+    if (a < b){
+      return true; //从大到小排序
+    }
+    return false;
   });
-  console.log("list = " + JSON.stringify(list));
 
-  if (list[0] + list[2] === list[1] * 2){
-    //是顺子 加一分
-    console.log("顺子");
-    score += 2;
+  if (Math.abs(list[0] - list[1]) === 1 && Math.abs(list[1] - list[2]) === 1){
+    //这是顺子
+    return list;
+  }
+  if (list[0] === 1 && list[1] === 13 && list[2] === 12){
+    // qka//特殊情况
+    return list;
   }
 
-  //检查同花
-  map = {};
+  return false;
+};
+
+
+
+const checkFlush = function (cards) {
+  var map = {};
+  var list = [];
   for (var i = 0 ; i < cards.length ; i ++){
     map[cards[i].color] = true;
+    list.push(parseInt(cards[i].value));
   }
-  console.log("map = " + JSON.stringify(map));
-  if (Object.keys(map) === 1){
-    console.log("是同花");
-    score += 3;
-  }
+  console.log("同花顺检查")
+  console.log("list = " + JSON.stringify(list));
+  if (Object.keys(map).length === 1){
+    //这是同花
+    list.sort(function (a , b) {
 
-  //检查豹子
-  map = {};
+      if (a === 1){
+        return false
+      }
+      if (b === 1){
+        return true;
+      }
+
+
+      if (a < b){
+        return true;
+      }
+      return false;
+    });
+    return list;
+  }
+  return false;
+};
+
+
+const checkLeopard = function (cards) {
+  var map = {};
+  var list = [];
   for (var i = 0 ; i < cards.length ; i ++){
     map[cards[i].value] = true;
+    list.push(parseInt(cards[i].value));
   }
-  console.log("map = " + JSON.stringify(map));
-  if (Object.keys(map) === 1){
-    console.log("是豹子");
-    score += 5;
+  if (Object.keys(map).length === 1){
+    //是豹子
+    return list
   }
-  return score;
+  return false;
+};
+
+
+const getCardsScore = function (cards) {
+  var scoreList = [];
+  var score = 0;
+  var result = [];
+  for (var i = 0 ; i < cards.length ; i ++){
+    result.push(parseInt(cards[i].value));
+  }
+  result.sort(function (a , b) {
+    if (a === 1){
+      return false
+    }
+    if (b === 1){
+      return true;
+    }
+    if (a < b){
+      return true
+    }
+    return false
+  });
+
+
+  if (checkDouble(cards)){
+    result = checkDouble(cards);
+    score += 1;
+  }
+  if (checkSmooth(cards)){
+    result = checkSmooth(cards);
+    score += 1;
+
+  }
+  if (checkFlush(cards)){
+    result = checkSmooth(cards);
+
+    score += 1;
+  }
+  if (checkLeopard(cards)){
+    result = checkLeopard(cards);
+    score += 1;
+  }
+  scoreList.push(score);
+  for (var i = 0 ; i < result.length ; i ++){
+    scoreList.push(result[i]);
+  }
+
+
+  console.log("get card score = " + JSON.stringify(scoreList));
+  return scoreList;
+};
+
+
+global.pkCards = function (card1, card2) {
+  var score1 = getCardsScore(card1);
+  var score2 = getCardsScore(card2);
+  console.log("score map 1" + JSON.stringify(score1));
+  console.log("score map 2" + JSON.stringify(score2));
+  for (var i = 0 ; i < 4 ; i ++){
+    if (score1[i] < score2[i]){
+      console.log("pk 胜");
+      return false;
+    }
+  }
+  return true;
 };
 
 module.exports = global;

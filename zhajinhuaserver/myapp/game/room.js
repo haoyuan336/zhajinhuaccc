@@ -112,24 +112,42 @@ const Room = function () {
     }
   };
   that.playerPK = function (uid, targetid) {
-
     console.log(uid + "玩家选择与" + targetid + "pk");
-    //给玩家发送对方的牌 ，并且将胜负信息一并发送
-    // for (){
-
-    // }
     var playerMap = {};
     for (var i = 0 ; i < _playerList.length ; i ++){
       playerMap[_playerList[i].uid] = _playerList[i];
     }
-
     playerMap[uid].sendPlayersCards(targetid,playerMap[targetid].getCurrentCards());
-
+    var result = global.pkCards(playerMap[uid].getCurrentCards(), playerMap[targetid].getCurrentCards());
+    console.log("result = " + result);
+    sendPkResult({
+          win: result?uid: targetid,
+          lose: result?targetid: uid
+        });
+    turnPlayerIndex();
   };
+
+
+
+
   that.playerGiveUp = function (uid) {
     console.log("玩家弃牌了" + uid);
   };
 
+  const sendPlayerGiveUp = function () {
+
+  };
+  const sendPlayerLose = function (uid) {
+    for (var i = 0 ; i < _playerList.length ; i ++){
+      _playerList[i].sendPlayerLose(uid);
+    }
+  };
+  const sendPkResult = function (data) {
+    console.log("像所有人发送pk结果");
+    for (var i = 0 ; i < _playerList.length ; i ++){
+      _playerList[i].sendPKresult(data);
+    }
+  };
 
   const changeRoomManger = function () {
     console.log("房主改变了 " + _playerList.length);
@@ -189,15 +207,17 @@ const Room = function () {
     for (var i = 0 ; i < global.pokerValue.length ; i ++){
       for (var j = 0 ; j < global.pokerColor.length ; j ++){
         var card = Card(global.pokerValue[i], global.pokerColor[j]);
+        // console.log("card = " + JSON.stringify(card));
         cardList.push(card);
       }
     }
-    for (var i = 0 ; i < global.pokerColor.length * global.pokerValue.length ; i ++){
-      var card = cardList[Math.round(Math.random() * cardList.length)];
-      _cardList.push(card);
-      cardList.splice(i, 1);
+    for (var i = 0 ; i < 52; i ++){
+      var index = Math.floor(Math.random() * cardList.length);
+      var temp = cardList[index];
+      cardList[index] = cardList[i];
+      cardList[i] = temp;
     }
-    console.log("card list = " + JSON.stringify(_cardList) + "count = " + _cardList.length);
+    _cardList = cardList;
   };
 
 
@@ -205,9 +225,41 @@ const Room = function () {
 
 
   const turnPlayerIndex = function () {
+
+    //检查是否只剩下一名胜利玩家
+    var leftPlayerCount = 0;
+    var winPlayer = undefined;
+    for (var i in _playerList){
+      console.log("player state = " + _playerList[i].getState());
+      if (_playerList[i].getState() === 'running'){
+        leftPlayerCount ++;
+        winPlayer = _playerList[i].uid;
+      }
+    }
+    console.log("left player count = " + leftPlayerCount);
+    if (leftPlayerCount === 1){
+      //只剩下一个还没有失败的玩家的时候， 这时候游戏结束
+      //给大家发送游戏结束的消息
+      sendGameOver(winPlayer);
+      return
+    }
+
+
+    //轮到下一位玩家了
+
+
     if (_turnPlayerIndex === _playerList.length){
       _turnPlayerIndex  = 0;
     }
+
+    console.log("current player index = " + _turnPlayerIndex);
+    if (_playerList[_turnPlayerIndex].getState() === 'lose'){
+      _turnPlayerIndex ++;
+      //如果当前玩家 输了 有可能是弃牌了，有可能是被pk 失败了，所以轮到下一位玩家出牌
+      turnPlayerIndex();
+      return;
+    }
+
     for (var  i = 0 ; i < _playerList.length ; i ++){
       var player = _playerList[i];
       player.turnPlayerIndex({
@@ -219,6 +271,26 @@ const Room = function () {
   };
 
 
+  const sendGameOver = function (winUid) {
+//这时候进行分数结算
+    var dataMap = {};
+    for (var i in _playerList){
+      _playerList[i].playerWin(winUid);
+      dataMap[_playerList[i].uid] = {
+        cards: _playerList[i].getCurrentCards(),
+        currentScore: _playerList[i].getCurrentScore(),
+        totalScore: _playerList[i].getTotalScore()
+      };
+    };
+    console.log('data map =  ' + JSON.stringify(dataMap));
+
+    for (var i in _playerList){
+      _playerList[i].sendGameOver({
+        win: winUid,
+        data: dataMap
+      });
+    }
+  };
 
   return that;
 };

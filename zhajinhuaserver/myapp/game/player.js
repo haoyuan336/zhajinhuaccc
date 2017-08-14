@@ -7,15 +7,23 @@ const PlayerState = {
   Waiting: 1,
   Running: 2,
   Ready: 3,
-  UnReady: 4
-
+  UnReady: 4,
+  Win: 5,
+  Lose: 6,
+  GiveUp: 7
 };
+
+
+
+
 
 const Player = function (socket) {
   var that = socket;
   var _state = PlayerState.Invalide;
   var _isOffline = false;
   var _currentCardsList = [];
+  var _currentScore = 0;
+  var _totalScore = 0;
   console.log("创建了一个玩家");
   that.isReady = false;
   that.index = undefined;
@@ -44,12 +52,15 @@ const Player = function (socket) {
         // that.room.pla
         break;
       case '1rate':
+        _currentScore += 1;
         that.room.playerChooseRate(that.uid,1);
         break;
       case "2rate":
+        _currentScore += 2;
         that.room.playerChooseRate(that.uid, 2);
         break;
       case "5rate":
+        _currentScore += 5;
         that.room.playerChooseRate(that.uid, 5);
         break;
       case "pk":
@@ -76,8 +87,11 @@ const Player = function (socket) {
 
   that.sendCard = function (data) {
     // global.getCardsScore(data);
+    //发牌的时候游戏开始
+    setState(PlayerState.Running);
     _currentCardsList = data;
-    socket.emit("push_cards", data);
+    // _currentCardsList = [{"value":"2","color":"clubs"},{"value":"1","color":"clubs"},{"value":"3","color":"clubs"}];
+    socket.emit("push_cards", _currentCardsList);
   };
 
   that.playerReady = function (value) {
@@ -110,15 +124,40 @@ const Player = function (socket) {
       cards: cards
     })
   };
+  that.sendPKresult = function (data) {
+    //收到了PK结果
+    if (data.lose === that.uid){
+      //自己输了
+      setState(PlayerState.Lose);
+    }
+    socket.emit("pk_result", data);
+  };
+  that.sendPlayerLose = function (uid) {
 
+  };
+
+  that.sendGameOver = function (data) {
+    socket.emit("game_over", data);
+  };
 
   that.getState = function () {
-    console.log("player state = " + _state);
-    if (_state === PlayerState.Ready){
-      return "Ready";
-    }
-    if (_state === PlayerState.UnReady){
-      return "UnReady";
+    // console.log("player state = " + _state);
+    switch (_state){
+      case PlayerState.Waiting:
+        return 'waiting';
+        break;
+      case PlayerState.Running:
+        return "running";
+      break;
+      case PlayerState.Lose:
+        return "lose";
+        break;
+      case PlayerState.GiveUp:
+        return "giveup";
+        break;
+      default:
+        return "no case";
+        break;
     }
   };
 
@@ -135,12 +174,41 @@ const Player = function (socket) {
         break;
       case PlayerState.Ready:
         break;
+      case PlayerState.Lose:
+        break;
+      case PlayerState.Win:
+        break;
+      case PlayerState.GiveUp:
+        break;
       default:
         break;
     }
     _state = state;
   };
   setState(PlayerState.UnReady);
+
+  // that.getLose = function () {
+  //   if (_state === PlayerState.Lose || _state === PlayerState.GiveUp){
+  //     return "lose";
+  //   }
+  //   return "running";
+  // };
+
+  that.getCurrentScore = function () {
+    return _currentScore;
+  };
+  
+  that.playerWin = function (uid) {
+    if (uid === that.uid){
+      //赢了
+      _totalScore += _currentScore;
+    }else {
+      _totalScore -= _currentScore;
+    }
+  };
+  that.getTotalScore = function () {
+    return _totalScore;
+  };
   return that;
 };
 module.exports = Player;

@@ -28,8 +28,20 @@ cc.Class({
     choosePlayerButton: {
       default: null,
       type: cc.Node
+    },
+    pkResultLabel: {
+      default: null,
+      type: cc.Label
+    },
+    winLabel: {
+      default: null,
+      type: cc.Label
     }
-    
+    ,
+    totalScoreLabel: {
+      default: null,
+      type: cc.Label
+    }
   },
   onLoad: function () {
 
@@ -63,6 +75,28 @@ cc.Class({
         this.showPokerValue(data.cards);
       }
     });
+    global.gameEventListener.on("pk_result", (data)=>{
+      console.log("收到了 pk result" + JSON.stringify(data));
+      if (data.lose === this.uid){
+        //这个玩家输了
+        console.log("这个玩家输了");
+        this.pkResultLabel.string = 'pk lose';
+      }
+    });
+    global.gameEventListener.on("game_over",  (data)=> {
+      let winUid = data.win;
+      if (winUid === this.uid){
+        //这位玩家胜利了
+        this.winLabel.string = "WIN";//胜利
+      }
+      console.log("player node data = " + JSON.stringify(data));
+      console.log("player node uid = " + this.uid);
+      let map = data.data[this.uid];
+      console.log("player node map = " + JSON.stringify(map));
+      let cards = map.cards;
+      this.totalScoreLabel = map.totalScore;
+      this.showPokerValue(cards);
+    })
   },
   init: function (data, currentIndex) {
     //使用初始化数据初始化玩家
