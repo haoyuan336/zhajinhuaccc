@@ -78,6 +78,10 @@ cc.Class({
       }
     });
 
+    global.gameEventListener.on("game_over", (data)=>{
+      console.log("游戏结束了");
+      //
+    });
 
     //获取到按钮组件
     this.disbaleBtton();

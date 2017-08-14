@@ -117,6 +117,12 @@ const Player = function (socket) {
       totalRate: totalRate
     });
   };
+  that.subScore = function (score) {
+    _currentScore -= score;
+  };
+  that.sendGameState = function (data) {
+    socket.emit("game_start", data);
+  };
 
   that.sendPlayersCards = function (uid, cards) {
     socket.emit("show_player_cards", {
@@ -199,12 +205,7 @@ const Player = function (socket) {
   };
   
   that.playerWin = function (uid) {
-    if (uid === that.uid){
-      //赢了
-      _totalScore += _currentScore;
-    }else {
-      _totalScore -= _currentScore;
-    }
+   
   };
   that.getTotalScore = function () {
     return _totalScore;

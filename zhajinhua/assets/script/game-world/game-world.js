@@ -79,6 +79,9 @@ cc.Class({
     global.gameEventListener.on("player_choose_pk", (uid)=>{
       global.eventlistener.fire("player_choose_pk", uid);
     });
+    global.gameEventListener.on("game_start", (data)=>{
+      this.totalRateLabel.string = data.totalScore;
+    });
 
 
   },

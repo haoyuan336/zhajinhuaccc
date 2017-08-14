@@ -19,7 +19,12 @@ cc.Class({
 
     global.gameEventListener.on("push_cards", (data)=>{
       this.node.active = false;
-    })
+    });
+    global.gameEventListener.on("game_over", (data)=>{
+      console.log("游戏结束了");
+      //
+      this.node.active = true;
+    });
   },
   changeRoomManager : function (uid) {
     if (uid === global.playerData.uid){

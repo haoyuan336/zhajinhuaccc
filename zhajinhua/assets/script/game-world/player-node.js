@@ -94,7 +94,7 @@ cc.Class({
       let map = data.data[this.uid];
       console.log("player node map = " + JSON.stringify(map));
       let cards = map.cards;
-      this.totalScoreLabel = map.totalScore;
+      this.totalScoreLabel.string = map.totalScore;
       this.showPokerValue(cards);
     })
   },
@@ -127,6 +127,11 @@ cc.Class({
   chooseButtonClick: function () {
     global.gameEventListener.fire("player_choose_pk", this.uid);
 
+  },
+  initUI: function () {
+    //初始化UI部分
+    this.winLabel.string = "";
+    this.pkResultLabel.string = "";
   },
   initPoker: function () {
     this.cardsList = [];

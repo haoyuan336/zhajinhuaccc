@@ -17,6 +17,7 @@ const Room = function () {
   var _playerList = [];
   var _currentRate = 0;
   var _totalRate = 0;
+  var _state = RoomState.Invalide;
   that.pushPlayer = function (player, cb) {
     if (_playerList.length === 0){
       _roomManager = player.uid;
@@ -87,6 +88,7 @@ const Room = function () {
   that.roomManagerStartGame = function (uid) {
     if (_roomManager === uid){
       //房主开始了游戏 ，那就开始发牌吧
+      setState(RoomState.Running); //开始游戏
       pushCard();
     }else {
       console.log(uid + "不是房主");
@@ -195,6 +197,17 @@ const Room = function () {
         //发一张牌，自己就去掉一张牌
       }
       player.sendCard(cards);
+
+      _totalRate = 0;
+      for (var i = 0 ; i < _playerList.length ; i ++){
+        var player = _playerList[i];
+        player.subScore(1); // 所有玩家都减1分
+        _totalRate += 1;
+      }
+
+      player.sendGameState({
+        totalScore: _totalRate
+      })
     }
     ///发完牌之后，房间将轮到谁出牌的才做发送给每个玩家
     turnPlayerIndex();
@@ -290,6 +303,29 @@ const Room = function () {
         data: dataMap
       });
     }
+  };
+
+  const setState = function (state) {
+
+    if (_state === state){
+      return;
+    }
+    switch (state){
+      case RoomState.Waitting:
+
+        break;
+      case RoomState.Running:
+        //开始游戏的一瞬间，所有玩家都减去一分
+
+
+
+
+        break;
+      default:
+        break;
+
+    }
+    _state = state;
   };
 
   return that;

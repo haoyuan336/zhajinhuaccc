@@ -150,7 +150,7 @@ const getCardsScore = function (cards) {
 
   }
   if (checkFlush(cards)){
-    result = checkSmooth(cards);
+    result = checkFlush(cards);
 
     score += 1;
   }
@@ -175,12 +175,12 @@ global.pkCards = function (card1, card2) {
   console.log("score map 1" + JSON.stringify(score1));
   console.log("score map 2" + JSON.stringify(score2));
   for (var i = 0 ; i < 4 ; i ++){
-    if (score1[i] < score2[i]){
+    if (score1[i] > score2[i]){
       console.log("pk 胜");
-      return false;
+      return true;
     }
   }
-  return true;
+  return false;
 };
 
 module.exports = global;

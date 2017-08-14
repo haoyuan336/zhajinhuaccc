@@ -110,7 +110,10 @@ cc.Class({
         global.socketManager.on("game_over", function (data) {
             console.log("收到游戏结束的消息" + JSON.stringify(data));
             global.gameEventListener.fire("game_over", data);
-        })
+        });
+        global.socketManager.on("game_start", function (data) {
+           global.gameEventListener.fire("game_start", data);
+        });
     },
 
 
