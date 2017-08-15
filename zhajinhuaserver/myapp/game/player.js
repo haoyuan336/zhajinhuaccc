@@ -205,7 +205,7 @@ const Player = function (socket) {
   };
   
   that.playerWin = function (uid) {
-   
+
   };
   that.getTotalScore = function () {
     return _totalScore;
