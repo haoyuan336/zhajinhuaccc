@@ -86,9 +86,8 @@ const Player = function (socket) {
   };
 
   that.sendCard = function (data) {
-    // global.getCardsScore(data);
+    console.log("sned card = " + JSON.stringify(data));
     //发牌的时候游戏开始
-    setState(PlayerState.Running);
     _currentCardsList = data;
     // _currentCardsList = [{"value":"2","color":"clubs"},{"value":"1","color":"clubs"},{"value":"3","color":"clubs"}];
     socket.emit("push_cards", _currentCardsList);
@@ -120,9 +119,7 @@ const Player = function (socket) {
   that.subScore = function (score) {
     _currentScore -= score;
   };
-  that.sendGameState = function (data) {
-    socket.emit("game_start", data);
-  };
+
 
   that.sendPlayersCards = function (uid, cards) {
     socket.emit("show_player_cards", {
@@ -191,7 +188,7 @@ const Player = function (socket) {
     }
     _state = state;
   };
-  setState(PlayerState.UnReady);
+  // setState(PlayerState.UnReady);
 
   // that.getLose = function () {
   //   if (_state === PlayerState.Lose || _state === PlayerState.GiveUp){

@@ -188,26 +188,17 @@ const Room = function () {
       //否则重新初始化牌，并洗牌
       initCards();
     }
+    console.log("玩家个数= " + _playerList.length);
     for (var i = 0 ; i < _playerList.length ; i ++){
       var cards = [];
       var player = _playerList[i];
+      console.log("uid = " + player.uid);
       for (var j = 0 ; j < 3 ; j ++){
         cards.push(_cardList[_cardList.length - 1]);
         _cardList.splice(_cardList.length - 1, 1);
         //发一张牌，自己就去掉一张牌
       }
       player.sendCard(cards);
-
-      _totalRate = 0;
-      for (var i = 0 ; i < _playerList.length ; i ++){
-        var player = _playerList[i];
-        player.subScore(1); // 所有玩家都减1分
-        _totalRate += 1;
-      }
-
-      player.sendGameState({
-        totalScore: _totalRate
-      })
     }
     ///发完牌之后，房间将轮到谁出牌的才做发送给每个玩家
     turnPlayerIndex();
@@ -253,8 +244,8 @@ const Room = function () {
     if (leftPlayerCount === 1){
       //只剩下一个还没有失败的玩家的时候， 这时候游戏结束
       //给大家发送游戏结束的消息
-      sendGameOver(winPlayer);
-      return
+      // sendGameOver(winPlayer);
+      // return
     }
 
 

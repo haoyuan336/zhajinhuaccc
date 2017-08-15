@@ -143,7 +143,7 @@ cc.Class({
         node.position = {
           x: pokerPos.x + 60 * i,
           y: pokerPos.y
-        }
+        };
         this.cardsList.push(node);
       }
     }
